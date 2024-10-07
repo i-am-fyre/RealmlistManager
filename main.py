@@ -11,8 +11,9 @@ CONFIG_FILE = 'config.json'
 LOG_FILE = 'app.log'
 
 # Setup logging
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, 
+logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # Load or save configuration for server addresses and file paths
 def load_config():
@@ -23,21 +24,26 @@ def load_config():
         logging.warning(f"Config file '{CONFIG_FILE}' not found. Creating a new one.")
         return {'configurations': []}
 
+
 def save_config(config):
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f, indent=4)
     logging.info(f"Configurations saved to '{CONFIG_FILE}'.")
 
+
 # Browse for files
 def browse_file(var, label, file_type="file"):
     if file_type == "realmlist":
-        file_path = filedialog.askopenfilename(title="Select realmlist.wtf", filetypes=[("Text Files", "*.wtf"), ("All Files", "*.*")])
+        file_path = filedialog.askopenfilename(title="Select realmlist.wtf", filetypes=[("Text Files", "*.wtf"),
+                                                                                        ("All Files", "*.*")])
     else:
-        file_path = filedialog.askopenfilename(title="Select WoW.exe", filetypes=[("Executable Files", "*.exe"), ("All Files", "*.*")])
+        file_path = filedialog.askopenfilename(title="Select WoW.exe", filetypes=[("Executable Files", "*.exe"),
+                                                                                  ("All Files", "*.*")])
     if file_path:
         var.delete(0, tk.END)
         var.insert(0, file_path)
         label.config(text=os.path.basename(file_path))
+
 
 # Update realmlist.wtf with selected server address
 def update_realmlist(realmlist_path, server_address, version):
@@ -45,19 +51,20 @@ def update_realmlist(realmlist_path, server_address, version):
         with open(realmlist_path, 'w') as file:
             # Write realmlist
             file.write(f"set realmlist {server_address}\n")
-            
+
             # If the version is Cataclysm, add patchlist
             if version == "Cataclysm (4.3.4)":
                 file.write(f"set patchlist {server_address}\n")
-        
+
         logging.info(f"Updated realmlist.wtf at {realmlist_path} with server address: {server_address}")
-        
+
         if version == "Cataclysm (4.3.4)":
             logging.info(f"Added patchlist for Cataclysm: {server_address}")
-            
+
     except Exception as e:
         logging.error(f"Failed to update realmlist.wtf: {e}")
         messagebox.showerror("Error", f"Failed to update realmlist.wtf: {e}")
+
 
 # Function to run selected WoW
 def run_selected_wow(config, listbox):
@@ -68,19 +75,19 @@ def run_selected_wow(config, listbox):
         server_address = selected_config['server_address']
         wow_exe_path = selected_config['wow_exe_path']
         version = selected_config['version']
-        
+
         # Ensure realmlist.wtf file exists
         if not os.path.exists(realmlist_path):
             logging.error(f"realmlist.wtf path not found: {realmlist_path}")
             messagebox.showerror("Error", "realmlist.wtf path is invalid or not selected.")
             return
-        
+
         # Ensure WoW.exe file exists
         if not os.path.exists(wow_exe_path):
             logging.error(f"WoW.exe path not found: {wow_exe_path}")
             messagebox.showerror("Error", "WoW.exe path is invalid or not selected.")
             return
-        
+
         # Update realmlist.wtf with server address
         update_realmlist(realmlist_path, server_address, version)
 
@@ -92,6 +99,7 @@ def run_selected_wow(config, listbox):
     except Exception as e:
         logging.error(f"Error running WoW: {e}")
         messagebox.showerror("Error", f"An error occurred while trying to run WoW: {e}")
+
 
 # Existing run_wow function
 def run_wow(wow_exe_path):
@@ -108,9 +116,11 @@ def run_wow(wow_exe_path):
         logging.error(f"Failed to run WoW.exe: {e}")
         messagebox.showerror("Error", f"Failed to run WoW.exe: {e}")
 
+
 def run_wow_async(wow_exe_path):
     thread = threading.Thread(target=run_wow, args=(wow_exe_path,))
     thread.start()
+
 
 # Add a new configuration
 def add_configuration(config, entry_fields, realmlist_label, wow_exe_label, listbox):
@@ -121,9 +131,10 @@ def add_configuration(config, entry_fields, realmlist_label, wow_exe_label, list
     version = entry_fields["version"].get()
 
     if not name or not realmlist or not wow_exe or not server_address:
-        messagebox.showwarning("Input Error", "Please fill in all fields.\n"+ name + ", " + realmlist + ", " + wow_exe + ", " + server_address)
+        messagebox.showwarning("Input Error", "Please fill in all fields.\n" + name + ", " + realmlist +
+                               ", " + wow_exe + ", " + server_address)
         return
-    
+
     for cfg in config['configurations']:
         if cfg['name'] == name:
             messagebox.showwarning("Duplicate Name", "A configuration with this name already exists.")
@@ -142,6 +153,7 @@ def add_configuration(config, entry_fields, realmlist_label, wow_exe_label, list
     save_config(config)
     clear_input_fields(entry_fields, realmlist_label, wow_exe_label)
 
+
 # Clear input fields after adding/updating a configuration
 def clear_input_fields(entry_fields, realmlist_label, wow_exe_label):
     # Clear the entry fields
@@ -149,7 +161,7 @@ def clear_input_fields(entry_fields, realmlist_label, wow_exe_label):
     entry_fields['realmlist'].delete(0, tk.END)  # Clear realmlist field
     entry_fields['wow_exe'].delete(0, tk.END)  # Clear wow_exe field
     entry_fields['server_address'].delete(0, tk.END)  # Clear server_address field
-    
+
     # Reset the labels for realmlist and wow_exe
     realmlist_label.config(text="No file selected")
     wow_exe_label.config(text="No file selected")
@@ -157,15 +169,13 @@ def clear_input_fields(entry_fields, realmlist_label, wow_exe_label):
     # Optionally reset version variable if you need to
     entry_fields['version'].set("")  # Clear version field
 
+
 # Main GUI setup
 def main():
     config = load_config()
 
     root = tk.Tk()
     root.title("Realmlist Updater")
-
-    # Define StringVar for search bar
-    search_var = tk.StringVar()
 
     # Frames for organization
     left_frame = tk.LabelFrame(root, text="Saved Configurations", padx=10, pady=10)
@@ -188,10 +198,12 @@ def main():
     move_down_button.grid(row=3, column=1, padx=5, pady=5, sticky="e")
 
     # Add a "Run WoW" Button in the Right Frame
-    tk.Button(left_frame, text="Run WoW", command=lambda: run_selected_wow(config, listbox)).grid(row=4, column=0, columnspan=2, pady=5, sticky="we")
+    tk.Button(left_frame, text="Run WoW", command=lambda: run_selected_wow(config, listbox)).grid(row=4, column=0,
+                                                                                                  columnspan=2, pady=5, sticky="we")
 
     # Update Selected button
-    update_button = tk.Button(left_frame, text="Update Selected", command=lambda: update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_label,  right_frame, add_button))
+    update_button = tk.Button(left_frame, text="Update Selected", command=lambda: update_selected(config, listbox,
+                                                                                                  entry_fields, realmlist_label, wow_exe_label,  right_frame, add_button))
     update_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
 
     # Add Delete Selected button below the Update Selected button
@@ -215,12 +227,14 @@ def main():
     tk.Label(right_frame, text="Select realmlist.wtf:").grid(row=1, column=0, sticky=tk.W, pady=2)
     realmlist_label = tk.Label(right_frame, text="No file selected")
     realmlist_label.grid(row=1, column=1, pady=2, sticky=tk.W)
-    tk.Button(right_frame, text="Browse", command=lambda: browse_file(entry_fields["realmlist"], realmlist_label, "realmlist")).grid(row=1, column=2, padx=5, pady=2)
+    tk.Button(right_frame, text="Browse", command=lambda: browse_file(entry_fields["realmlist"], realmlist_label,
+                                                                      "realmlist")).grid(row=1, column=2, padx=5, pady=2)
 
     tk.Label(right_frame, text="Select WoW.exe:").grid(row=2, column=0, sticky=tk.W, pady=2)
     wow_exe_label = tk.Label(right_frame, text="No file selected")
     wow_exe_label.grid(row=2, column=1, pady=2, sticky=tk.W)
-    tk.Button(right_frame, text="Browse", command=lambda: browse_file(entry_fields["wow_exe"], wow_exe_label, "exe")).grid(row=2, column=2, padx=5, pady=2)
+    tk.Button(right_frame, text="Browse", command=lambda: browse_file(entry_fields["wow_exe"], wow_exe_label, "exe")).grid(
+        row=2, column=2, padx=5, pady=2)
 
     tk.Label(right_frame, text="Server Address:").grid(row=3, column=0, sticky=tk.W, pady=2)
     entry_fields['server_address'].grid(row=3, column=1, pady=2)  # Use the existing entry field from the dictionary
@@ -230,9 +244,9 @@ def main():
 
     # Define the options for the dropdown
     version_options = [
-        "Vanilla (1.12.x)", 
-        "The Burning Crusade (2.4.3)", 
-        "Wrath of the Lich King (3.3.5)", 
+        "Vanilla (1.12.x)",
+        "The Burning Crusade (2.4.3)",
+        "Wrath of the Lich King (3.3.5)",
         "Cataclysm (4.3.4)"
     ]
 
@@ -245,10 +259,12 @@ def main():
     entry_fields['version'] = version_var
 
     # Add button, default state
-    add_button = tk.Button(right_frame, text="Add", command=lambda: add_configuration(config, entry_fields, realmlist_label, wow_exe_label, listbox))
+    add_button = tk.Button(right_frame, text="Add", command=lambda: add_configuration(config, entry_fields, realmlist_label,
+                                                                                      wow_exe_label, listbox))
     add_button.grid(row=6, column=0, columnspan=2, pady=20, sticky="we")  # Stretched across the panel
 
     root.mainloop()
+
 
 # Delete a configuration
 def delete_configuration(config, listbox):
@@ -257,7 +273,8 @@ def delete_configuration(config, listbox):
         del config['configurations'][index]
         listbox.delete(index)
         save_config(config)
-        logging.info(f"Configuration deleted.")
+        logging.info("Configuration deleted.")
+
 
 # Function to move configuration up or down
 def move_config(config, listbox, direction):
@@ -292,6 +309,7 @@ def move_config(config, listbox, direction):
         logging.error(f"Error moving configuration: {e}")
         messagebox.showerror("Error", f"An error occurred while moving the configuration: {e}")
 
+
 # Helper function to update the listbox
 def update_listbox(listbox, config):
     # Clear the listbox
@@ -300,6 +318,7 @@ def update_listbox(listbox, config):
     # Re-populate listbox with updated configurations
     for conf in config['configurations']:
         listbox.insert(tk.END, conf['name'])
+
 
 def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_label, right_frame, add_button):
     try:
@@ -338,13 +357,15 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
         wow_exe_label.config(text=os.path.basename(selected_config.get('wow_exe', '')))
 
         # Replace the "Add" button with a "Save" button
-        add_button.config(text="Save", command=lambda: save_configuration(config, listbox, entry_fields, selected_index, right_frame, add_button, realmlist_label, wow_exe_label))
+        add_button.config(text="Save", command=lambda: save_configuration(config, listbox, entry_fields, selected_index,
+                                                                          right_frame, add_button, realmlist_label, wow_exe_label))
 
     except IndexError:
         messagebox.showwarning("No Configuration Selected", "Please select a configuration to update.")
 
     except KeyError as e:
         print(f"KeyError: {e}. Check that the keys are correct in your selected configuration.")
+
 
 def save_configuration(config, listbox, entry_fields, index, right_frame, add_button, realmlist_label, wow_exe_label):
     # Update the selected configuration with new values
@@ -369,10 +390,12 @@ def save_configuration(config, listbox, entry_fields, index, right_frame, add_bu
 
     # Revert back to "Add Configuration" mode
     right_frame.config(text="Add Configuration")
-    add_button.config(text="Add", command=lambda: add_configuration(config, entry_fields, realmlist_label, wow_exe_label, listbox))
+    add_button.config(text="Add", command=lambda: add_configuration(config, entry_fields, realmlist_label, wow_exe_label,
+                                                                    listbox))
 
     # Clear the entry fields for a new entry
     clear_entry_fields(entry_fields)
+
 
 def clear_entry_fields(entry_fields):
     for field in entry_fields.values():
@@ -380,6 +403,7 @@ def clear_entry_fields(entry_fields):
             field.delete(0, tk.END)  # Clear Entry fields
         elif isinstance(field, tk.StringVar):
             field.set('')  # Clear StringVar fields
+
 
 if __name__ == "__main__":
     main()
