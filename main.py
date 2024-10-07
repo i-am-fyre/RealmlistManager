@@ -307,9 +307,6 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
         selected_index = listbox.curselection()[0]
         selected_config = config['configurations'][selected_index]
 
-        # Debugging: Check the selected configuration
-        print(f"Selected configuration: {selected_config}")
-
         # Update right panel label to "Edit Configuration"
         right_frame.config(text="Edit Configuration")
 
