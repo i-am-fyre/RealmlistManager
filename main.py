@@ -203,7 +203,7 @@ def main():
 
     # Update Selected button
     update_button = tk.Button(left_frame, text="Update Selected",
-                              command=lambda: update_selected(config, listbox,entry_fields, realmlist_label, wow_exe_label,
+                              command=lambda: update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_label,
                                                               right_frame, add_button))
     update_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
 
