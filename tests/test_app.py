@@ -49,7 +49,7 @@ class TestRealmlistUpdater(unittest.TestCase):
 
     @patch('main.save_config')
     @patch('main.messagebox.showwarning')
-    def test_add_configuration_duplicate_name(self, mock_showwarning):
+    def test_add_configuration_duplicate_name(self, mock_showwarning, mock_save_config):
         config = {'configurations': [{'name': 'Test Config'}]}
         entry_fields = {'name': MagicMock(), 'realmlist': MagicMock(), 'wow_exe': MagicMock(), 'server_address': MagicMock(), 'version': MagicMock()}
         entry_fields['name'].get.return_value = 'Test Config'  # Simulating a duplicate name
