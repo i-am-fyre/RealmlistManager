@@ -1,5 +1,7 @@
 # WoW Realmlist Manager
 
+![image](https://github.com/user-attachments/assets/ca62b4f1-8fa3-4ead-8cce-6f608eadd031)
+
 ## Introduction
 
 WoW Realmlist Manager is a tool designed to simplify the management of World of Warcraft (WoW) server configurations. It allows you to easily switch between multiple private servers across different versions of WoW, including Vanilla, The Burning Crusade, Wrath of the Lich King, and Cataclysm. With this application, you can manage server addresses, set realmlist paths, and launch WoW with the appropriate settings.
