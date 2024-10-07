@@ -51,12 +51,15 @@ def update_realmlist(realmlist_path, server_address, version):
         with open(realmlist_path, 'w') as file:
             # Write realmlist
             file.write(f"set realmlist {server_address}\n")
+            # Write portal
+            file.write(f"set portal {server_address}\n")
 
             # If the version is Cataclysm, add patchlist
             if version == "Cataclysm (4.3.4)":
                 file.write(f"set patchlist {server_address}\n")
 
         logging.info(f"Updated realmlist.wtf at {realmlist_path} with server address: {server_address}")
+        logging.info(f"Updated realmlist.wtf at {realmlist_path} with portal address: {server_address}")
 
         if version == "Cataclysm (4.3.4)":
             logging.info(f"Added patchlist for Cataclysm: {server_address}")
@@ -73,6 +76,7 @@ def run_selected_wow(config, listbox):
         selected_config = config['configurations'][selected_index]
         realmlist_path = selected_config['realmlist_path']
         server_address = selected_config['server_address']
+        portal_address = selected_config['portal_address']
         wow_exe_path = selected_config['wow_exe_path']
         version = selected_config['version']
 
@@ -128,6 +132,7 @@ def add_configuration(config, entry_fields, realmlist_label, wow_exe_label, list
     realmlist = entry_fields["realmlist"].get()
     wow_exe = entry_fields["wow_exe"].get()
     server_address = entry_fields["server_address"].get()
+    portal_address = entry_fields["portal_address"].get()
     version = entry_fields["version"].get()
 
     if not name or not realmlist or not wow_exe or not server_address:
@@ -144,6 +149,7 @@ def add_configuration(config, entry_fields, realmlist_label, wow_exe_label, list
         'realmlist_path': realmlist,
         'wow_exe_path': wow_exe,
         'server_address': server_address,
+        'portal_address': portal_address,
         'version': version
     }
     config['configurations'].append(new_config)
@@ -161,6 +167,7 @@ def clear_input_fields(entry_fields, realmlist_label, wow_exe_label):
     entry_fields['realmlist'].delete(0, tk.END)  # Clear realmlist field
     entry_fields['wow_exe'].delete(0, tk.END)  # Clear wow_exe field
     entry_fields['server_address'].delete(0, tk.END)  # Clear server_address field
+    entry_fields['portal_address'].delete(0, tk.END)  # Clear portal_address field
 
     # Reset the labels for realmlist and wow_exe
     realmlist_label.config(text="No file selected")
@@ -218,6 +225,7 @@ def main():
         'realmlist': tk.Entry(right_frame),
         'wow_exe': tk.Entry(right_frame),
         'server_address': tk.Entry(right_frame),
+        'portal_address': tk.Entry(right_frame),
         'version': tk.StringVar(right_frame)
     }
 
@@ -240,6 +248,9 @@ def main():
     tk.Label(right_frame, text="Server Address:").grid(row=3, column=0, sticky=tk.W, pady=2)
     entry_fields['server_address'].grid(row=3, column=1, pady=2)  # Use the existing entry field from the dictionary
 
+    tk.Label(right_frame, text="Portal Address:").grid(row=4, column=0, sticky=tk.W, pady=2)
+    entry_fields['portal_address'].grid(row=4, column=1, pady=2)  # Use the existing entry field from the dictionary
+
     # Add a label and a dropdown (OptionMenu) for WoW version
     version_var = tk.StringVar(value="Vanilla (1.12.x)")  # Default value
 
@@ -252,9 +263,9 @@ def main():
     ]
 
     # Add label and dropdown to the right frame
-    tk.Label(right_frame, text="WoW Version:").grid(row=4, column=0, sticky=tk.W, pady=2)
+    tk.Label(right_frame, text="WoW Version:").grid(row=5, column=0, sticky=tk.W, pady=2)
     version_dropdown = tk.OptionMenu(right_frame, version_var, *version_options)
-    version_dropdown.grid(row=4, column=1, pady=2)
+    version_dropdown.grid(row=5, column=1, pady=2)
 
     # Update the 'entry_fields' dictionary to include the version
     entry_fields['version'] = version_var
@@ -335,6 +346,7 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
         entry_fields['realmlist'].config(state=tk.NORMAL)
         entry_fields['wow_exe'].config(state=tk.NORMAL)
         entry_fields['server_address'].config(state=tk.NORMAL)
+        entry_fields['portal_address'].config(state=tk.NORMAL)
 
         # Pre-fill the entry fields with the selected configuration's values
         entry_fields['name'].delete(0, tk.END)
@@ -349,9 +361,13 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
         entry_fields['server_address'].delete(0, tk.END)
         entry_fields['server_address'].insert(0, selected_config.get('server_address', ''))
 
+        entry_fields['portal_address'].delete(0, tk.END)
+        entry_fields['portal_address'].insert(0, selected_config.get('portal_address', ''))
+
         # Force the UI to update to reflect changes
         entry_fields['name'].update_idletasks()
         entry_fields['server_address'].update_idletasks()
+        entry_fields['portal_address'].update_idletasks()
 
         # Update the labels to reflect the selected file paths
         realmlist_label.config(text=os.path.basename(selected_config.get('realmlist', '')))
@@ -379,6 +395,7 @@ def save_configuration(config, listbox, entry_fields, index, right_frame, add_bu
         'realmlist': entry_fields['realmlist'].get(),
         'wow_exe': entry_fields['wow_exe'].get(),
         'server_address': server_address,
+        'portal_address': portal_address,
         'version': selected_version
     }
 

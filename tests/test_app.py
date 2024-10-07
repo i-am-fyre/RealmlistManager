@@ -40,9 +40,10 @@ class TestRealmlistUpdater(unittest.TestCase):
     def test_update_realmlist(self, mock_open):
         realmlist_path = 'realmlist.wtf'
         server_address = 'test.server.address'
+        portal_address = 'test.server.address'
         version = 'Vanilla (1.12.x)'
 
-        update_realmlist(realmlist_path, server_address, version)
+        update_realmlist(realmlist_path, server_address, portal_address, version)
 
         mock_open.assert_called_once_with(realmlist_path, 'w')
         mock_open().write.assert_any_call(f'set realmlist {server_address}\n')
@@ -52,7 +53,7 @@ class TestRealmlistUpdater(unittest.TestCase):
     def test_add_configuration_duplicate_name(self, mock_showwarning, mock_save_config):
         config = {'configurations': [{'name': 'Test Config'}]}
         entry_fields = {'name': MagicMock(), 'realmlist': MagicMock(), 'wow_exe': MagicMock(), 'server_address': MagicMock(),
-                        'version': MagicMock()}
+                        'portal_address': MagicMock(),'version': MagicMock()}
         entry_fields['name'].get.return_value = 'Test Config'  # Simulating a duplicate name
 
         add_configuration(config, entry_fields, None, None, None)
