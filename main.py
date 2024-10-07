@@ -52,7 +52,7 @@ def update_realmlist(realmlist_path, server_address, version):
             # Write realmlist
             file.write(f"set realmlist {server_address}\n")
             # Write portal
-            file.write(f"set portal {server_address}\n")
+            file.write(f"set portal {portal_address}\n")
 
             # If the version is Cataclysm, add patchlist
             if version == "Cataclysm (4.3.4)":
