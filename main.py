@@ -198,12 +198,13 @@ def main():
     move_down_button.grid(row=3, column=1, padx=5, pady=5, sticky="e")
 
     # Add a "Run WoW" Button in the Right Frame
-    tk.Button(left_frame, text="Run WoW", command=lambda: run_selected_wow(config, listbox)).grid(row=4, column=0,
-                                                                                                  columnspan=2, pady=5, sticky="we")
+    tk.Button(left_frame, text="Run WoW", command=lambda: run_selected_wow(config, listbox)
+              ).grid(row=4, column=0, columnspan=2, pady=5, sticky="we")
 
     # Update Selected button
-    update_button = tk.Button(left_frame, text="Update Selected", command=lambda: update_selected(config, listbox,
-                                                                                                  entry_fields, realmlist_label, wow_exe_label,  right_frame, add_button))
+    update_button = tk.Button(left_frame, text="Update Selected",
+                              command=lambda: update_selected(config, listbox,entry_fields, realmlist_label, wow_exe_label,
+                                                              right_frame, add_button))
     update_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
 
     # Add Delete Selected button below the Update Selected button
@@ -358,7 +359,8 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
 
         # Replace the "Add" button with a "Save" button
         add_button.config(text="Save", command=lambda: save_configuration(config, listbox, entry_fields, selected_index,
-                                                                          right_frame, add_button, realmlist_label, wow_exe_label))
+                                                                          right_frame, add_button, realmlist_label,
+                                                                          wow_exe_label))
 
     except IndexError:
         messagebox.showwarning("No Configuration Selected", "Please select a configuration to update.")
