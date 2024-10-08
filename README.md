@@ -56,5 +56,7 @@ The purpose of this app is to make it easier to modify and manage the `realmlist
 
 Contributions are welcome! Feel free to open issues and pull requests on the [GitHub repository](https://github.com/i-am-fyre/RealmlistManager).
 
+Thank you to [@fly-man-](https://github.com/fly-man-) for the additional support around `set portal`.
+
 ## License
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](https://github.com/i-am-fyre/RealmlistManager/blob/master/LICENSE) file for more details.
