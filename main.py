@@ -46,7 +46,7 @@ def browse_file(var, label, file_type="file"):
 
 
 # Update realmlist.wtf with selected server address
-def update_realmlist(realmlist_path, server_address, version):
+def update_realmlist(realmlist_path, server_address, portal_address, version):
     try:
         with open(realmlist_path, 'w') as file:
             # Write realmlist
@@ -93,7 +93,7 @@ def run_selected_wow(config, listbox):
             return
 
         # Update realmlist.wtf with server address
-        update_realmlist(realmlist_path, server_address, version)
+        update_realmlist(realmlist_path, server_address, portal_address, version)
 
         # Run WoW.exe
         run_wow_async(wow_exe_path)
@@ -248,7 +248,7 @@ def main():
     tk.Label(right_frame, text="Server Address:").grid(row=3, column=0, sticky=tk.W, pady=2)
     entry_fields['server_address'].grid(row=3, column=1, pady=2)  # Use the existing entry field from the dictionary
 
-    tk.Label(right_frame, text="Portal Address:").grid(row=4, column=0, sticky=tk.W, pady=2)
+    tk.Label(right_frame, text="(Optional) Portal Address:").grid(row=4, column=0, sticky=tk.W, pady=2)
     entry_fields['portal_address'].grid(row=4, column=1, pady=2)  # Use the existing entry field from the dictionary
 
     # Add a label and a dropdown (OptionMenu) for WoW version
@@ -389,6 +389,7 @@ def save_configuration(config, listbox, entry_fields, index, right_frame, add_bu
     # Update the selected configuration with new values
     selected_version = entry_fields['version'].get()
     server_address = entry_fields['server_address'].get()
+    portal_address = entry_fields['portal_address'].get()
 
     config['configurations'][index] = {
         'name': entry_fields['name'].get(),
