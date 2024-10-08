@@ -353,10 +353,10 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
         entry_fields['name'].insert(0, selected_config.get('name', ''))
 
         entry_fields['realmlist'].delete(0, tk.END)
-        entry_fields['realmlist'].insert(0, selected_config.get('realmlist', ''))
+        entry_fields['realmlist'].insert(0, selected_config.get('realmlist_path', ''))
 
         entry_fields['wow_exe'].delete(0, tk.END)
-        entry_fields['wow_exe'].insert(0, selected_config.get('wow_exe', ''))
+        entry_fields['wow_exe'].insert(0, selected_config.get('wow_exe_path', ''))
 
         entry_fields['server_address'].delete(0, tk.END)
         entry_fields['server_address'].insert(0, selected_config.get('server_address', ''))
@@ -370,8 +370,8 @@ def update_selected(config, listbox, entry_fields, realmlist_label, wow_exe_labe
         entry_fields['portal_address'].update_idletasks()
 
         # Update the labels to reflect the selected file paths
-        realmlist_label.config(text=os.path.basename(selected_config.get('realmlist', '')))
-        wow_exe_label.config(text=os.path.basename(selected_config.get('wow_exe', '')))
+        realmlist_label.config(text=os.path.basename(selected_config.get('realmlist_path', '')))
+        wow_exe_label.config(text=os.path.basename(selected_config.get('wow_exe_path', '')))
 
         # Replace the "Add" button with a "Save" button
         add_button.config(text="Save", command=lambda: save_configuration(config, listbox, entry_fields, selected_index,
@@ -393,8 +393,8 @@ def save_configuration(config, listbox, entry_fields, index, right_frame, add_bu
 
     config['configurations'][index] = {
         'name': entry_fields['name'].get(),
-        'realmlist': entry_fields['realmlist'].get(),
-        'wow_exe': entry_fields['wow_exe'].get(),
+        'realmlist_path': entry_fields['realmlist'].get(),
+        'wow_exe_path': entry_fields['wow_exe'].get(),
         'server_address': server_address,
         'portal_address': portal_address,
         'version': selected_version
